@@ -62,13 +62,14 @@ var model = {
         for (var i = 0; i < this.numShips; i++) {
             do {
                 locations = this.generateShip();
-            } while (this.collision(loction));
-            this.ships[i].loctions = loctions;
+            } while (this.collision(locations));
+            this.ships[i].locations = locations;
         }
     },
     generateShip: function() {
         var direction = Math.floor(Math.random() * 2);
         var row, col;
+
         if (direction === 1) {
             row = Math.floor(Math.random() * this.boardSize);
             col = Math.floor(Math.random() * (this.boardSize - this.shipLength));
@@ -76,12 +77,13 @@ var model = {
             row = Math.floor(Math.random() * (this.boardSize - this.shipLength));
             col = Math.floor(Math.random() * this.boardSize);
         }
+
         var newShipLocations = [];
         for (var i = 0; i < this.shipLength; i++) {
             if (direction === 1) {
                 newShipLocations.push(row + "" + (col + i));
             } else {
-                newShipLocations.push(row + "" + (col + i));
+                newShipLocations.push((row + i) + "" + col);
             }
         }
         return newShipLocations;
@@ -109,7 +111,6 @@ var model = {
 //model.fire("12");
 //model.fire("11");
 //model.fire("10");
-
 
 function parseGuess(guess) {
     var alphabet = ["A", "B", "C", "D", "E", "F", "G"];
@@ -164,17 +165,18 @@ var controller = {
 
 function init() {
     var fireButton = document.getElementById("fireButton");
-    var guess = guessInput.value;
-    controller.processGuess(guess);
-    guessInput.value = "";
-}
-function init() {
-    var fireButton = document.getElementById("fireButton");
     fireButton.onclick = handleFireButton;
     var guessInput = document.getElementById("guessInput");
     guessInput.onkeypress = handleKeyPress;
     model.generateShipLocations();
 }
+function handleFireButton() {
+    var fireButton = document.getElementById("guessInput");
+    var guess = guessInput.value;
+    controller.processGuess(guess);
+    guessInput.value = "";
+}
+
 window.onload = init;
 function handleKeyPress(e) {
     var fireButton = document.getElementById("fireButton");
